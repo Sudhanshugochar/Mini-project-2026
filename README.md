@@ -1,4 +1,5 @@
-# AI-Powered GitHub Self-Analysis Dashboard
+# Mini-project-2026
+## AI-Powered GitHub Self-Analysis Dashboard
 
 ## 🚀 Overview
 An interactive dashboard that analyzes your GitHub profile using local LLMs (Ollama) and traditional data science techniques. Get insights into your coding habits, sentiment, skills, and future activity.
@@ -25,8 +26,8 @@ An interactive dashboard that analyzes your GitHub profile using local LLMs (Oll
 
 1.  **Clone the repository**:
     ```bash
-    git clone <repository_url>
-    cd ai-github-dashboard
+    git clone https://github.com/Sudhanshugochar/Mini-project-2026.git
+    cd Mini-project-2026
     ```
 
 2.  **Create a virtual environment**:
@@ -51,7 +52,7 @@ An interactive dashboard that analyzes your GitHub profile using local LLMs (Oll
 
 2.  **Run the Dashboard**:
     ```bash
-    streamlit run app/dashboard.py
+    streamlit run dashboard.py
     ```
 
 3.  **Explore**:

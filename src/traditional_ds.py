@@ -172,11 +172,12 @@ class TraditionalAnalyzer:
 
         return stats
 
-    def calculate_health_score(self, repo_data):
-        files = repo_data.get("details", {}).get("files", [])
+    def calculate_health_score(self, repo_row):
+        files = repo_row.get("files", [])
         score = 0
         missing = []
         
+        # 1. File checks (4 points)
         checks = {
             "README.md": "README",
             "LICENSE": "License",
@@ -190,13 +191,55 @@ class TraditionalAnalyzer:
                 score += 1
             else:
                 missing.append(name)
+                
+        # 2. Description (1 point)
+        if repo_row.get("description"):
+            score += 1
+        else:
+            missing.append("Description")
+            
+        # 3. Topics (1 point)
+        if repo_row.get("topics") and len(repo_row.get("topics")) > 0:
+            score += 1
+        else:
+            missing.append("Topics")
+            
+        # 4. Active maintenance (updated within last 6 months) (1 point)
+        updated_at = repo_row.get("updated_at")
+        if pd.notna(updated_at):
+            now = pd.Timestamp.now(tz='UTC')
+            if updated_at.tz is None:
+                now = pd.Timestamp.now()
+            if (now - updated_at).days <= 180:
+                score += 1
+            else:
+                missing.append("Recent Updates")
+        else:
+            missing.append("Recent Updates")
         
-        if score == 4: grade = "A"
-        elif score == 3: grade = "B"
-        elif score == 2: grade = "C"
+        # Total points = 7
+        if score >= 6: grade = "A"
+        elif score >= 4: grade = "B"
+        elif score >= 2: grade = "C"
         else: grade = "D"
         
         return {"grade": grade, "missing": missing, "score": score}
+
+    def get_repo_health_df(self):
+        if self.repos_df is None or self.repos_df.empty:
+            return None
+            
+        health_data = []
+        for _, row in self.repos_df.iterrows():
+            health = self.calculate_health_score(row)
+            health_data.append({
+                "Repository": row.get("name"),
+                "Grade": health["grade"],
+                "Score": f"{health['score']}/7",
+                "Needs Improvement": ", ".join(health["missing"]) if health["missing"] else "None!"
+            })
+            
+        return pd.DataFrame(health_data)
 
     def detect_tech_stack(self, repo_data):
         files = repo_data.get("details", {}).get("files", [])

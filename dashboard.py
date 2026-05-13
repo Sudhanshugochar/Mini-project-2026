@@ -164,79 +164,7 @@ tabs = st.tabs([
 with tabs[0]:
     stats = analyzer.get_basic_stats()
     
-    # Custom CSS for KPI Cards
-    st.markdown("""
-    <style>
-    .kpi-card {
-        background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 12px;
-        padding: 20px;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        text-align: center;
-        margin-bottom: 20px;
-    }
-    .kpi-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(56, 189, 248, 0.3);
-    }
-    .kpi-icon {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-        display: inline-block;
-        background: -webkit-linear-gradient(45deg, #38bdf8, #818cf8);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
-    .kpi-value {
-        font-size: 2.2rem;
-        font-weight: 800;
-        color: #f8fafc;
-        margin-bottom: 5px;
-        line-height: 1;
-    }
-    .kpi-label {
-        font-size: 0.9rem;
-        color: #94a3b8;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-icon">📁</div>
-            <div class="kpi-value">{{stats.get('total_repos', 0)}}</div>
-            <div class="kpi-label">{{txt("metric_total_repos")}}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col2:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-icon">⭐</div>
-            <div class="kpi-value">{{stats.get('total_stars', 0)}}</div>
-            <div class="kpi-label">{{txt("metric_total_stars")}}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    with col3:
-        st.markdown(f"""
-        <div class="kpi-card">
-            <div class="kpi-icon">🔄</div>
-            <div class="kpi-value">{{stats.get('total_commits_tracked', 0)}}</div>
-            <div class="kpi-label">{{txt("metric_commits_tracked")}}</div>
-        </div>
-        """, unsafe_allow_html=True)
-        
-    st.markdown("---")
+    # Overview metrics removed per user request
     
     col_1, col_2 = st.columns(2)
     with col_1:
@@ -276,6 +204,14 @@ with tabs[0]:
             st.plotly_chart(fig, use_container_width=True)
         else:
             st.info(txt("clustering_info_not_enough"))
+
+    st.markdown("---")
+    st.subheader("Repository Health Overview")
+    health_df = analyzer.get_repo_health_df()
+    if health_df is not None and not health_df.empty:
+        st.dataframe(health_df, use_container_width=True)
+    else:
+        st.info("No repository data available for health check.")
 
 # --- Tab 2: LLM Insights ---
 with tabs[1]:
@@ -336,17 +272,39 @@ with tabs[1]:
 
 # --- Tab 3: GitHub Replay ---
 with tabs[2]:
-    st.header(txt("github_replay_header"))
+    # Ensure translations are available
+    header_text = txt("github_replay_header")
+    top_lang_text = txt("top_language_label")
+    streak_text = txt("longest_streak_label")
+    peak_text = txt("peak_month_label")
+    
     user_stats = analyzer.get_user_stats()
     
-    col_r1, col_r2 = st.columns(2)
-    with col_r1:
-        st.metric(txt("top_language_label"), user_stats.get('top_language'))
-        st.metric(txt("longest_streak_label"), f"{user_stats.get('longest_streak')} Days")
-    
-    with col_r2:
-        st.metric(txt("peak_month_label"), user_stats.get('most_active_month'))
-        st.metric("Chronotype", user_stats.get('chronotype'))
+    # Custom CSS card for GitHub Replay
+    st.markdown(f"""
+    <div style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); padding: 30px; border-radius: 16px; color: #f8fafc; font-family: 'Inter', sans-serif; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.05);">
+        <h2 style="margin-top: 0; display: flex; align-items: center; gap: 10px; color: #f8fafc; font-size: 1.8rem; font-weight: 800; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">🎵 {header_text} 2025</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            <div>
+                <div style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{top_lang_text}</div>
+                <div style="font-size: 2.4rem; font-weight: 800; color: #38bdf8; text-shadow: 0 2px 10px rgba(56,189,248,0.2);">{user_stats.get('top_language', 'N/A')}</div>
+            </div>
+            <div>
+                <div style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{peak_text}</div>
+                <div style="font-size: 2.4rem; font-weight: 800; color: #a78bfa; text-shadow: 0 2px 10px rgba(167,139,250,0.2);">{user_stats.get('most_active_month', 'N/A')}</div>
+            </div>
+            <div>
+                <div style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">{streak_text}</div>
+                <div style="font-size: 2.4rem; font-weight: 800; color: #34d399; text-shadow: 0 2px 10px rgba(52,211,153,0.2);">{user_stats.get('longest_streak', 0)} <span style="font-size: 1rem; color: #94a3b8; font-weight: 500;">Days</span></div>
+            </div>
+            <div>
+                <div style="color: #94a3b8; font-size: 0.95rem; margin-bottom: 8px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Chronotype</div>
+                <div style="font-size: 2.4rem; font-weight: 800; color: #fbbf24; text-shadow: 0 2px 10px rgba(251,191,36,0.2); display: flex; align-items: center; gap: 10px;">{user_stats.get('chronotype', 'N/A')}</div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    """, unsafe_allow_html=True)
         
     st.markdown("### " + txt("persona_label"))
     if st.button(txt("generate_replay_button")):

@@ -110,3 +110,43 @@ python -m venv venv
 source venv/bin/activate
 **3. Install required Python packages**
 pip install -r requirements.txt
+**4. Configure Environment Variables (Optional but Recommended)**
+GITHUB_USERNAME=your_github_username
+GITHUB_TOKEN=your_personal_access_token
+
+--
+
+#📂 Detailed Project Structure
+Mini-project-2026/
+│
+├── dashboard.py               # Main entry point for the Streamlit UI
+├── requirements.txt           # Python dependencies
+├── .env                       # Environment variables (Tokens/Usernames)
+├── README.md                  # Project documentation
+│
+├── src/                       # Core Logic Modules
+│   ├── data_collection.py     # GitHub API wrapper, rate limit handler
+│   ├── traditional_ds.py      # Pandas logic, Clustering, Forecasting
+│   ├── llm_analysis.py        # Ollama API integration & prompt engineering
+│   └── resume_builder.py      # PDF generation logic (FPDF/ReportLab)
+│
+├── locales/                   # Internationalization (i18n) files
+│   ├── en.json                # English translations
+│   ├── es.json                # Spanish translations
+│   └── ...                    
+│
+├── data/                      # Local cache for fetched JSON data (gitignored)
+│   └── raw_data.json          
+│
+└── tests/                     # Unit and integration tests
+    ├── test_resume.py
+    └── verify_system.py
+
+🤝 Contributing
+Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute.
+
+📄 License
+This project is open-source and available under the MIT License.
+
+
+

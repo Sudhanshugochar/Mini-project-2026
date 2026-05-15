@@ -39,37 +39,39 @@ We utilize Ollama to run models like `llama3.2:1b` and `mistral` locally. This p
 ---
 
 ## 🏗️ System Architecture & Workflow
-┌──────────┐
-   │ 👤 User  │
-   └────┬─────┘
-        │ Inputs Credentials
-        ▼
+
+```text
+       ┌──────────┐
+       │  👤 User │
+       └────┬─────┘
+            │ Inputs Credentials
+            ▼
 ┌────────────────────────────────────────┐
 │      💻 Streamlit Dashboard UI         │
 └───────────────────┬────────────────────┘
-│ Triggers Data Fetch
-▼
+                    │ Triggers Data Fetch
+                    ▼
 ┌────────────────────────────────────────┐
 │      🌐 GitHubFetcher Module           │
 │  (Handles API, Pagination & Limits)    │
 └───────────────────┬────────────────────┘
-│ Writes Data Cache
-▼
+                    │ Writes Data Cache
+                    ▼
 ┌────────────────────────────────────────┐
 │     📂 data/raw_data.json Storage     │
 └───────────┬──────────────────────┬─────┘
-│                      │
-│ Quantitative Data    │ Unstructured Text
-▼                      ▼
+            │                      │
+            │ Quantitative Data    │ Unstructured Text
+            ▼                      ▼
 ┌───────────────────────┐  ┌───────────────────────┐
-│  📊 TraditionalDS     │  │   🤖 OllamaAnalyzer   │
-│  • K-Means Clustering │  │   • Sentiment Engine  │
-│  • Activity Forecast  │  │   • Skill Extractor   │
+│   📊 TraditionalDS    │  │   🤖 OllamaAnalyzer   │
+│ • K-Means Clustering  │  │ • Sentiment Engine    │
+│ • Activity Forecast   │  │ • Skill Extractor     │
 └───────────┬───────────┘  └───────────┬───────────┘
-│                          │
-└───────────┬──────────────┘
-│ Injects Output Metrics
-▼
+            │                          │
+            └───────────┬──────────────┘
+                        │ Injects Output Metrics
+                        ▼
 ┌────────────────────────────────────────┐
 │      🎨 Streamlit View Elements        │
 │  • Interactive Plotly Engine Charts    │

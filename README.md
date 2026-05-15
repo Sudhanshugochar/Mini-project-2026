@@ -145,13 +145,13 @@ Mini-project-2026/
     └── verify_system.py
 
 🔮 Future Scope / Roadmap
-[ ] Multi-user Comparison: Compare two GitHub profiles side-by-side.
+[1] Multi-user Comparison: Compare two GitHub profiles side-by-side.
 
-[ ] Code Complexity Analysis: Analyze the Cyclomatic Complexity of specific repositories.
+[2] Code Complexity Analysis: Analyze the Cyclomatic Complexity of specific repositories.
 
-[ ] More LLM Integration: Support for DeepSeek or local Llama 3 8B for deeper code reviews.
+[3] More LLM Integration: Support for DeepSeek or local Llama 3 8B for deeper code reviews.
 
-[ ] Cloud Deployment: Dockerize the application for easy deployment on AWS/Render (with API-based LLM fallbacks).
+[4] Cloud Deployment: Dockerize the application for easy deployment on AWS/Render (with API-based LLM fallbacks).
 
 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the issues page if you want to contribute.
